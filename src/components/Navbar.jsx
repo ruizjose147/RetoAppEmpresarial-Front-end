@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, NavLink} from 'react-router-dom'
+import Login from './Login'
 
 export const Navbar = () => {
   return (
@@ -11,7 +12,7 @@ export const Navbar = () => {
                     Inicio
                 </NavLink>
                 <NavLink className="btn btn-primary mr-2" to="/admin">
-                    Admin
+                    Cajero
                 </NavLink>
                 <NavLink className="btn btn-primary mr-2" to="/login">
                     Login
