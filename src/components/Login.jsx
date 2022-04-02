@@ -1,7 +1,11 @@
 import React from 'react'
 import { useState } from 'react';
+import app from '../firebase/firebase';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-export const Login = () => {
+const auth = getAuth(app);
+
+const Login = () => {
 
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
@@ -25,10 +29,35 @@ export const Login = () => {
         if(pass.length<6){
             //console.log("pass min 6")
             setError("El password debe ser de minimo 6 caracteres")
+            return 
         }
         console.log("pasando todas las validaciones")
         setError(null)
+
+        if(esRegistro){
+            registrar()
+        }
     }
+
+    const registrar = React.useCallback(async() => {
+        try {
+            await createUserWithEmailAndPassword(auth, email, pass)
+            
+        } catch (error) {
+            console.log(error)
+            if(error.code==='auth/invalid-email'){
+              setError('Email no valido')  
+              return
+            }
+            if(error.code==='auth/email-already-in-use'){
+                setError('Ya existe una cuenta con este Email')
+            }
+            
+        }
+      },
+      [email, pass],
+    )
+    
 
   return (
     <div className="mt-5">
