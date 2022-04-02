@@ -1,7 +1,10 @@
 import React from 'react'
 import { useState } from 'react';
-import app from '../firebase/firebase';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import app, { db } from '../firebase/firebase';
+import { getAuth, createUserWithEmailAndPassword,
+        signInWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+
 
 const auth = getAuth(app);
 
@@ -31,23 +34,53 @@ const Login = () => {
             setError("El password debe ser de minimo 6 caracteres")
             return 
         }
-        console.log("pasando todas las validaciones")
+
         setError(null)
 
         if(esRegistro){
             registrar()
+        }else{
+            login()
         }
     }
 
+    const login =   React.useCallback(async() => {
+        try {
+            const res =await signInWithEmailAndPassword(auth, email, pass);
+            console.log(res.user)
+            setEmail('')
+            setPass('')
+            setError(null)
+        } catch (error) {
+            console.log(error)
+            if(error.code==='auth/invalid-email'){
+                setError('Email no valido')  
+              }
+               if(error.code==='auth/user-not-found'){
+                setError('No existe una cuenta asociada al email')
+            }
+              if(error.code==='auth/wrong-password'){
+                  setError('La contraseña es incorrecta')
+              }
+             
+        }
+    }, [email, pass])
+
     const registrar = React.useCallback(async() => {
         try {
-            await createUserWithEmailAndPassword(auth, email, pass)
-            
+            const res = await createUserWithEmailAndPassword(auth, email, pass)
+            await addDoc(collection(db, "cajeros"), {
+                email: res.user.email,
+                uid: res.user.uid
+              });
+              setEmail('')
+              setPass('')
+              setError(null)
+              console.log(res);
         } catch (error) {
             console.log(error)
             if(error.code==='auth/invalid-email'){
               setError('Email no valido')  
-              return
             }
             if(error.code==='auth/email-already-in-use'){
                 setError('Ya existe una cuenta con este Email')
