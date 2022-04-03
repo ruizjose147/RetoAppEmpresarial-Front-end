@@ -2,9 +2,10 @@ import React from 'react'
 import { useState } from 'react';
 import app, { db } from '../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword,
-        signInWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
-
+        signInWithEmailAndPassword, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+//import { setEnteringUser } from "../redux/actions/UserActions";
 
 const auth = getAuth(app);
 
@@ -13,7 +14,11 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [error, setError] = useState(null);
-    const [esRegistro, setEsRegistro] = useState(true)
+    const [esRegistro, setEsRegistro] = useState(true);
+    const navigate = useNavigate();
+    const googleProvider = new GoogleAuthProvider();
+    //const githubProvider = new GithubAuthProvider();
+    //const dispatch = useDispatch()
 
     const procesarDatos = e =>{
         e.preventDefault();
@@ -51,8 +56,10 @@ const Login = () => {
             setEmail('')
             setPass('')
             setError(null)
+
+            navigate("/cajero")
+
         } catch (error) {
-            console.log(error)
             if(error.code==='auth/invalid-email'){
                 setError('Email no valido')  
               }
@@ -64,7 +71,7 @@ const Login = () => {
               }
              
         }
-    }, [email, pass])
+    }, [email, pass, navigate])
 
     const registrar = React.useCallback(async() => {
         try {
@@ -76,7 +83,7 @@ const Login = () => {
               setEmail('')
               setPass('')
               setError(null)
-              console.log(res);
+              navigate("/cajero")
         } catch (error) {
             console.log(error)
             if(error.code==='auth/invalid-email'){
@@ -88,9 +95,22 @@ const Login = () => {
             
         }
       },
-      [email, pass],
+      [email, pass, navigate],
     )
-    
+
+    const registrarConGoogle = async() => {
+        await signInWithPopup(auth, googleProvider)
+        .then(async (result) => {  
+          await setDoc(doc(db, "cajeros", "google"), {
+            email: result.user.email,
+            uid: result.user.uid,
+          });
+          navigate("/cajero");
+        }).catch((error) => {
+          console.log(error.code);
+          console.log(error.message);
+        });
+      }
 
   return (
     <div className="mt-5">
@@ -135,6 +155,15 @@ const Login = () => {
                     </button>
                     <br />
                     <button 
+                        className="btn btn-md btn-primary btn-block mt-2"
+                        type="button"
+                        onClick={registrarConGoogle}
+
+                    >
+                       Google
+                    </button>
+                    <br />
+                    <button 
                         className="btn btn-sm btn-info btn-block mt-2"
                         onClick={()=> setEsRegistro(!setEsRegistro)}
                         type="button"
@@ -152,3 +181,7 @@ const Login = () => {
 }
 
 export default Login
+/*{
+    esRegistro ? "¿Estas Registrado?" : "¿No tienes Cuenta?"
+    onClick={()=> logConGoogle()}
+}*/

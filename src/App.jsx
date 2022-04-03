@@ -2,24 +2,46 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import { Navbar } from "./components/Navbar";
+import Vendedor from "./components/Vendedor";
+import app from './firebase/firebase';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const auth = getAuth(app);
+
 //Switch === Routes en la v6
 function App() {
-  return (
+
+  const [firebaseUser, setFirebaseUser] = React.useState(false)
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+        setFirebaseUser(user)
+      }else{
+        setFirebaseUser(null)
+      }
+    })
+  }, [])
+
+  return firebaseUser !== false ? (
     <Router>
       <div className="container">
-        <Navbar />
+        <Navbar firebaseUser={firebaseUser}/>
+        <Vendedor />
         <Routes>
           <Route path="/" element={<div>inicio... </div>}>
           </Route>
           <Route path="/login" element={<Login/>}>
           </Route>
-          <Route path="/cajero" element={<div>cajero...  </div>}>
+          <Route path="/cajero" element={<div><h3>{auth.email}</h3></div>}>
           </Route>
         </Routes>
       </div>
     </Router>
 
-  );
+  ) : (
+    <p>Cargando....</p>
+  )
 }
 
 export default App;
