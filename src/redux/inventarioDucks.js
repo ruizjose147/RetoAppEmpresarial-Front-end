@@ -24,10 +24,10 @@ export default function productosReducer(state = dataInicial, action){
 //acciones
 
 export const obtenerProductosAccion = () => async (dispatch, getState) => {
-    
+    //`https://app-reto-app-empresarial.herokuapp.com/productos`
             try {
-                const res = await fetch(HOST_API + "/productos");
-                const datos = await res.json    
+                const res = await fetch(`http://localhost:8080/productos`);
+                const datos = res.json()   
                 dispatch({
                         type: OBTENER_PRODUCTOS_EXITO,
                         payload: datos
@@ -35,6 +35,6 @@ export const obtenerProductosAccion = () => async (dispatch, getState) => {
             } catch (error) {
                 console.log(error)
             } finally {
-                setLoading(false);
+                //setLoading(false);
             }
         };

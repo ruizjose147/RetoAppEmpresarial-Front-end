@@ -11,7 +11,7 @@ export const Productos = () => {
   return (
     <div>
         Lista de Productos
-        <button onClick={()=> dispatch(obtenerProductosAccion)}>
+        <button onClick={()=> dispatch(obtenerProductosAccion())}>
             Listar Productos
         </button>
     </div>

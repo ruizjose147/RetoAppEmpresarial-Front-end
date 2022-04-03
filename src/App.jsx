@@ -27,19 +27,19 @@ function App() {
     <Router>
           <div className="container">
           <Navbar firebaseUser={firebaseUser} />
-          <div>
-            <Vendedor />
-          </div>
+          
           <Routes>
             <Route path="/" element={<div>inicio... </div>}>
             </Route>
             <Route path="/login" element={<Login />}>
             </Route>
             <Route 
-              path="/cajero" element={
+              path="/cajero/*" element={
                   <div>
-                    <h3>{auth.email}</h3>
+                     
+                    <Vendedor />
                   </div>
+                 
             }>
             </Route>
           </Routes>
@@ -59,4 +59,6 @@ export default App;
 
 
 //{<p>Cargando....</p>}
+
+//<h3>{auth.email}</h3>
 
