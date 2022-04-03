@@ -7,7 +7,7 @@ import app from './firebase/firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const auth = getAuth(app);
-//const [loading, setLoading] = useState(false);
+
 //Switch === Routes en la v6
 function App() {
 
@@ -25,18 +25,25 @@ function App() {
 
   return firebaseUser !== false ? (
     <Router>
-      <div className="container">
-        <Navbar firebaseUser={firebaseUser} />
-        <Vendedor />
-        <Routes>
-          <Route path="/" element={<div>inicio... </div>}>
-          </Route>
-          <Route path="/login" element={<Login />}>
-          </Route>
-          <Route path="/cajero" element={<div><h3>{auth.email}</h3></div>}>
-          </Route>
-        </Routes>
-      </div>
+          <div className="container">
+          <Navbar firebaseUser={firebaseUser} />
+          <div>
+            <Vendedor />
+          </div>
+          <Routes>
+            <Route path="/" element={<div>inicio... </div>}>
+            </Route>
+            <Route path="/login" element={<Login />}>
+            </Route>
+            <Route 
+              path="/cajero" element={
+                  <div>
+                    <h3>{auth.email}</h3>
+                  </div>
+            }>
+            </Route>
+          </Routes>
+        </div>
     </Router>
 
   ) : (
