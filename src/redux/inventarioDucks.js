@@ -1,6 +1,5 @@
 //constantes 
 
-import axios from "axios";
 
 const HOST_API = "https://app-reto-app-empresarial.herokuapp.com"
 const dataInicial = {
@@ -28,9 +27,10 @@ export const obtenerProductosAccion = () => async (dispatch, getState) => {
     
             try {
                 const res = await fetch(HOST_API + "/productos");
-                    dispatch({
+                const datos = await res.json    
+                dispatch({
                         type: OBTENER_PRODUCTOS_EXITO,
-                        payload: res
+                        payload: datos
                     })
             } catch (error) {
                 console.log(error)
