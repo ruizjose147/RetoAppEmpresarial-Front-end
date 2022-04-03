@@ -4,8 +4,7 @@ import app, { db } from '../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword,
         signInWithEmailAndPassword, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-//import { setEnteringUser } from "../redux/actions/UserActions";
+import { useNavigate } from "react-router-dom"; 
 
 const auth = getAuth(app);
 
@@ -17,8 +16,8 @@ const Login = () => {
     const [esRegistro, setEsRegistro] = useState(true);
     const navigate = useNavigate();
     const googleProvider = new GoogleAuthProvider();
-    //const githubProvider = new GithubAuthProvider();
-    //const dispatch = useDispatch()
+    const githubProvider = new GithubAuthProvider();
+    
 
     const procesarDatos = e =>{
         e.preventDefault();
@@ -98,8 +97,8 @@ const Login = () => {
       [email, pass, navigate],
     )
 
-    const registrarConGoogle = async() => {
-        await signInWithPopup(auth, googleProvider)
+    const registrarConGoogle = () => {
+         signInWithPopup(auth, googleProvider)
         .then(async (result) => {  
           await setDoc(doc(db, "cajeros", "google"), {
             email: result.user.email,
@@ -110,7 +109,26 @@ const Login = () => {
           console.log(error.code);
           console.log(error.message);
         });
-      }
+    }
+
+    const registrarConGitHub = () => {
+        signInWithPopup(auth, githubProvider)
+       .then(async (result) => {  
+         await setDoc(doc(db, "cajeros", "github"), {
+           email: result.user.email,
+           uid: result.user.uid,
+         });
+         navigate("/cajero");
+       }).catch((error) => {
+        console.log(error)
+        if(error.code==='auth/invalid-email'){
+          setError('Email no valido')  
+        }
+        if(error.code==='auth/operation-not-allowed'){
+            setError('Ya existe una cuenta con este Email')
+        }
+       });
+     }
 
   return (
     <div className="mt-5">
@@ -155,12 +173,33 @@ const Login = () => {
                     </button>
                     <br />
                     <button 
+                    
                         className="btn btn-md btn-primary btn-block mt-2"
                         type="button"
-                        onClick={registrarConGoogle}
+                        onClick={()=>registrarConGoogle()}
 
                     >
-                       Google
+                        <i 
+                        className="fa-brands fa-google me-2"
+                        ></i>
+                        {
+                            esRegistro ? "Registrarme Con Google" : "Ingresar Con Google"
+                        }
+                    </button>
+                    <br />
+                    <button 
+                    
+                        className="btn btn-md btn-primary btn-block mt-2"
+                        type="button"
+                        onClick={()=>registrarConGitHub()}
+
+                    >
+                        <i 
+                        className="fa-brands fa-github me-2"
+                        ></i>
+                        {
+                            esRegistro ? "Registrarme Con GitHub" : "Ingresar Con GitHub"
+                        }
                     </button>
                     <br />
                     <button 

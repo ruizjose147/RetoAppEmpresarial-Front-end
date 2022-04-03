@@ -7,7 +7,7 @@ import app from './firebase/firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const auth = getAuth(app);
-
+//const [loading, setLoading] = useState(false);
 //Switch === Routes en la v6
 function App() {
 
@@ -15,9 +15,9 @@ function App() {
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if(user){
+      if (user) {
         setFirebaseUser(user)
-      }else{
+      } else {
         setFirebaseUser(null)
       }
     })
@@ -26,12 +26,12 @@ function App() {
   return firebaseUser !== false ? (
     <Router>
       <div className="container">
-        <Navbar firebaseUser={firebaseUser}/>
+        <Navbar firebaseUser={firebaseUser} />
         <Vendedor />
         <Routes>
           <Route path="/" element={<div>inicio... </div>}>
           </Route>
-          <Route path="/login" element={<Login/>}>
+          <Route path="/login" element={<Login />}>
           </Route>
           <Route path="/cajero" element={<div><h3>{auth.email}</h3></div>}>
           </Route>
@@ -40,8 +40,16 @@ function App() {
     </Router>
 
   ) : (
-    <p>Cargando....</p>
+    <div className="d-flex justify-content-center">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
   )
 }
 
 export default App;
+
+
+//{<p>Cargando....</p>}
+

@@ -26,13 +26,13 @@ const Vendedor = () => {
   return (
         <div>
             {
-              auth.currentUser !== null ? (
+              user !== null ? (
                 <h3>{user.email}</h3>
               ):(
                 null
-              )
-                  
+              )   
             }
-        </div>)
+        </div>
+  )
 };
 export default Vendedor;
