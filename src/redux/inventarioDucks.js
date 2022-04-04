@@ -26,7 +26,7 @@ export default function productosReducer(state = dataInicial, action){
 export const obtenerProductosAccion = () => async (dispatch) => {
     //http://localhost:8080/   https://app-reto-appempresarial.herokuapp.com/productos
             try {
-                const res = await fetch("http://localhost:8080/producto/productos");
+                const res = await fetch("http://localhost:8080/productos");
                 const datos = await res.json()   
                 dispatch({
                         type: OBTENER_PRODUCTOS_EXITO,

@@ -23,6 +23,7 @@ export const Navbar = (props) => {
         <div>
             <div className="d-flex">
                 <NavLink className="btn btn-primary mr-2" to="/">
+                <i class="fa-solid fa-house"></i>
                     Inicio
                 </NavLink>
                 {

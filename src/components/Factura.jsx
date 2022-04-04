@@ -1,12 +1,17 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { obtenerFacturasAccion } from '../redux/facturaDucks'
+import { generarPDF } from './ImprimirFactura'
 
 export const Factura = () => {
     const dispatch = useDispatch()
 
     const facturas = useSelector(store => store.factura.listaFacturas)
     console.log(facturas)
+
+    const handlerImprimir = (item) => {
+        generarPDF(item);
+      };
 
     return (
 
@@ -41,8 +46,11 @@ export const Factura = () => {
                                     <p> Total: {item.totalFactura}</p>
                                     <p> Vendedor: {item.nombreVendedor}</p>
 
-                                    <button className="btn btn-primary btn-sm float-right">
-                                        Imprimir
+                                    <button className="btn btn-primary btn-sm float-right"
+                                    onClick={() => handlerImprimir(item)}
+                                    >
+                                        <i class="fa-solid fa-print"></i>
+                                          Imprimir
                                     </button>
                                 </li>
                             ))

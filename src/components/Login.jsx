@@ -17,7 +17,7 @@ const Login = () => {
     const navigate = useNavigate();
     const googleProvider = new GoogleAuthProvider();
     const githubProvider = new GithubAuthProvider();
-    
+    const [loading, setLoading] = useState(false);
 
     const procesarDatos = e =>{
         e.preventDefault();
@@ -49,6 +49,7 @@ const Login = () => {
     }
 
     const login =   React.useCallback(async() => {
+        
         try {
             const res =await signInWithEmailAndPassword(auth, email, pass);
             console.log(res.user)
@@ -72,7 +73,9 @@ const Login = () => {
         }
     }, [email, pass, navigate])
 
+
     const registrar = React.useCallback(async() => {
+        
         try {
             const res = await createUserWithEmailAndPassword(auth, email, pass)
             await addDoc(collection(db, "cajeros"), {
@@ -98,7 +101,8 @@ const Login = () => {
     )
 
     const registrarConGoogle = () => {
-         signInWithPopup(auth, googleProvider)
+        try {
+            signInWithPopup(auth, googleProvider)
         .then(async (result) => {  
           await setDoc(doc(db, "cajeros", "google"), {
             email: result.user.email,
@@ -109,10 +113,16 @@ const Login = () => {
           console.log(error.code);
           console.log(error.message);
         });
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
     const registrarConGitHub = () => {
-        signInWithPopup(auth, githubProvider)
+        
+        try {
+              signInWithPopup(auth, githubProvider)
        .then(async (result) => {  
          await setDoc(doc(db, "cajeros", "github"), {
            email: result.user.email,
@@ -128,9 +138,13 @@ const Login = () => {
             setError('Ya existe una cuenta con este Email')
         }
        });
+        } catch (error) {
+            console.log(error)
+        }
+      
      }
 
-  return (
+  return (  
     <div className="mt-5">
         <h3 className="text-center">
             {
