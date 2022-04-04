@@ -17,7 +17,6 @@ const Login = () => {
     const navigate = useNavigate();
     const googleProvider = new GoogleAuthProvider();
     const githubProvider = new GithubAuthProvider();
-    const [loading, setLoading] = useState(false);
 
     const procesarDatos = e =>{
         e.preventDefault();
