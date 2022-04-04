@@ -5,15 +5,24 @@ import { obtenerProductosAccion } from '../redux/inventarioDucks'
 export const Productos = () => {
     const dispatch = useDispatch()
 
-    const productos = useSelector(store => store)
+    const productos = useSelector(store => store.productos.lista)
     console.log(productos)
 
   return (
     <div>
-        Lista de Productos
         <button onClick={()=> dispatch(obtenerProductosAccion())}>
             Listar Productos
         </button>
+         <ul>
+            {
+                productos.map( item => (
+                    <li key={item.idProducto}>{item.nombreProducto}</li>
+                ))
+            }
+        </ul>
     </div>
   )
 }
+
+
+
