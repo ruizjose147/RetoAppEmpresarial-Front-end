@@ -23,7 +23,7 @@ export default function productosReducer(state = dataInicial, action){
 
 //acciones
 
-export const obtenerProductosAccion = () => async (dispatch, getState) => {
+export const obtenerProductosAccion = () => async (dispatch) => {
     //http://localhost:8080/   https://app-reto-appempresarial.herokuapp.com/productos
             try {
                 const res = await fetch("http://localhost:8080/producto/productos");
